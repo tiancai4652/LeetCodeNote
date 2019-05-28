@@ -85,7 +85,7 @@ namespace FirstLevel
         [InlineData(new int[] { 0,4,3,0 }, 0)]
         public void test(int[] nums, int target)
         {
-            var result = TwoSumGo(nums, target);
+            var result = TwoSum2(nums, target);
             Assert.True(result[0].Equals(0) && result[1].Equals(1) && result.Count() == 2);
         }
 
