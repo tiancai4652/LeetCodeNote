@@ -93,9 +93,6 @@ namespace FirstLevel._2
                 list2.Add(x2.val);
                 x2 = x2.next;
             }
-
-            list1.Reverse();
-            list2.Reverse();
             List<int> total = new List<int>();
 
             int count = list1.Count > list2.Count ? list1.Count : list2.Count;
@@ -183,6 +180,15 @@ namespace FirstLevel._2
             ListNode num1 = new ListNode(1);
             ListNode num11 = num1.next = new ListNode(8);
             ListNode num2 = new ListNode(0);
+            var result = AddTwoNumbers2(num1, num2);
+        }
+
+        [Fact]
+        public void test3()
+        {
+            ListNode num1 = new ListNode(9);
+            ListNode num11 = num1.next = new ListNode(8);
+            ListNode num2 = new ListNode(1);
             var result = AddTwoNumbers2(num1, num2);
         }
 
