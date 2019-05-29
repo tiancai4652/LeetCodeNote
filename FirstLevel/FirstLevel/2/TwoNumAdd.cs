@@ -18,6 +18,10 @@ namespace FirstLevel._2
     //输入：(2 -> 4 -> 3) + (5 -> 6 -> 4)
     //输出：7 -> 0 -> 8
     //原因：342 + 465 = 807
+
+    //输入：(1 -> 8 ) + (0)
+    //输出：7 -> 0 -> 8
+    //原因：81 + 0 = 81
     public class TwoNumAdd
     {
         public ListNode AddTwoNumbers(ListNode l1, ListNode l2)
@@ -51,37 +55,7 @@ namespace FirstLevel._2
             return listNode;
         }
 
-        public ListNode AddTwoNumbers2(ListNode l1, ListNode l2)
-        {
-            List<int> list1 = new List<int>();
-            List<int> list2 = new List<int>();
-
-            ListNode x1 = l1;
-            while (x1 != null)
-            {
-                list1.Add(x1.val);
-                x1 = x1.next;
-            }
-            ListNode x2 = l1;
-            while (x2 != null)
-            {
-                list2.Add(x2.val);
-                x2 = x2.next;
-            }
-
-            list1.Reverse();
-            list2.Reverse();
-            List<int> total = new List<int>();
-
-            int count = list1.Count < list2.Count ? list1.Count : list2.Count;
-
-            GetInt(ref total, list1, list2, 0, 0, count);
-
-            ListNode listNode = new ListNode(0);
-            return GetListNode2(ref listNode, total);
-        }
-
-        ListNode GetListNode(ref ListNode p,int total)
+        ListNode GetListNode(ref ListNode p, int total)
         {
 
             p.val = total % 10;
@@ -92,6 +66,44 @@ namespace FirstLevel._2
                 p.next = GetListNode(ref p.next, total);
             }
             return p;
+        }
+
+        public ListNode AddTwoNumbers2(ListNode l1, ListNode l2)
+        {
+            if (l1.val == 0 && l1.next == null)
+            {
+                return l2;
+            }
+            if (l2.val == 0 && l2.next == null)
+            {
+                return l1;
+            }
+            List<int> list1 = new List<int>();
+            List<int> list2 = new List<int>();
+
+            ListNode x1 = l1;
+            while (x1 != null)
+            {
+                list1.Add(x1.val);
+                x1 = x1.next;
+            }
+            ListNode x2 = l2;
+            while (x2 != null)
+            {
+                list2.Add(x2.val);
+                x2 = x2.next;
+            }
+
+            list1.Reverse();
+            list2.Reverse();
+            List<int> total = new List<int>();
+
+            int count = list1.Count > list2.Count ? list1.Count : list2.Count;
+
+            GetInt(ref total, list1, list2, 0, 0, count);
+
+            ListNode listNode = new ListNode(0);
+            return GetListNode2(ref listNode, total);
         }
 
         ListNode GetListNode2(ref ListNode p, List<int> total)
@@ -106,48 +118,72 @@ namespace FirstLevel._2
             return p;
         }
 
-
-       
-
-
-         void GetInt(ref List<int> total, List<int> l1, List<int> l2, int index, int extra, int count)
+        void GetInt(ref List<int> total, List<int> l1, List<int> l2, int index, int extra, int count)
         {
-            int x = l1[index] + l2[index] + extra;
-            if (x > 10)
+            int para1 = 0;
+            if(index<=l1.Count-1)
+            {
+                para1=l1[index];
+            }
+            int para2 = 0;
+            if (index <= l2.Count - 1)
+            {
+                para2 = l2[index];
+            }
+
+            int x = para1 + para2 + extra;
+            if (x >= 10)
             {
                 total.Add(x - 10);
+                index += 1;
+                if (index <= count - 1)
+                {
+                    GetInt(ref total, l1, l2, index, 1, count);
+                }
+                else
+                {
+                    total.Add(1);
+                }
+            }
+            else
+            {
+                total.Add(x);
                 index += 1;
                 if (index <= count - 1)
                 {
                     GetInt(ref total, l1, l2, index , 0, count);
                 }
             }
-            else
-            {
-                total.Add(x);
-                if (index <= count - 1)
-                {
-                    GetInt(ref total, l1, l2, index , 1, count);
-                }
-            }
         }
-
 
         [Fact]
         public void test()
         {
-
             ListNode num1 = new ListNode(2);
             ListNode num11 = num1.next = new ListNode(4);
             ListNode num111 = num11.next = new ListNode(3);
-
             ListNode num2 = new ListNode(5);
             ListNode num22 = num2.next = new ListNode(6);
             ListNode num222 = num22.next = new ListNode(4);
 
+            var result = AddTwoNumbers2(num1, num2);
+        }
 
-            var result = AddTwoNumbers(num1, num2);
-         
+        [Fact]
+        public void test1()
+        {
+            ListNode num1 = new ListNode(5);
+            ListNode num2 = new ListNode(5);
+            var result = AddTwoNumbers2(num1, num2);
+        }
+
+        [Fact]
+        public void test2()
+        {
+            ListNode num1 = new ListNode(1);
+            ListNode num11 = num1.next = new ListNode(8);
+            ListNode num2 = new ListNode(0);
+            var result = AddTwoNumbers2(num1, num2);
         }
 
     }
