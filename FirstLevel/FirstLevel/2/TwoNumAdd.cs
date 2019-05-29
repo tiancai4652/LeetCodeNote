@@ -24,50 +24,7 @@ namespace FirstLevel._2
     //原因：81 + 0 = 81
     public class TwoNumAdd
     {
-        public ListNode AddTwoNumbers(ListNode l1, ListNode l2)
-        {
-            string str1 = "";
-            ListNode x1 = l1;
-            string str2 = "";
-            ListNode x2 = l2;
-            while (x1 != null)
-            {
-                str1 += x1.val;
-                x1 = x1.next;
-            }
-            while (x2 != null)
-            {
-                str2 += x2.val;
-                x2 = x2.next;
-            }
-
-            int int1 = int.Parse(str1);
-            int int2 = int.Parse(str2);
-
-            int total = int1 + int2;
-
-            ListNode listNode = new ListNode(0);
-            if (total != 0)
-            {
-                listNode = GetListNode(ref listNode,total);
-            }
-
-            return listNode;
-        }
-
-        ListNode GetListNode(ref ListNode p, int total)
-        {
-
-            p.val = total % 10;
-            total = total / 10;
-            if (total != 0)
-            {
-                p.next = new ListNode(0);
-                p.next = GetListNode(ref p.next, total);
-            }
-            return p;
-        }
-
+        #region 我的实现
         public ListNode AddTwoNumbers2(ListNode l1, ListNode l2)
         {
             if (l1.val == 0 && l1.next == null)
@@ -118,9 +75,9 @@ namespace FirstLevel._2
         void GetInt(ref List<int> total, List<int> l1, List<int> l2, int index, int extra, int count)
         {
             int para1 = 0;
-            if(index<=l1.Count-1)
+            if (index <= l1.Count - 1)
             {
-                para1=l1[index];
+                para1 = l1[index];
             }
             int para2 = 0;
             if (index <= l2.Count - 1)
@@ -148,10 +105,96 @@ namespace FirstLevel._2
                 index += 1;
                 if (index <= count - 1)
                 {
-                    GetInt(ref total, l1, l2, index , 0, count);
+                    GetInt(ref total, l1, l2, index, 0, count);
                 }
             }
         }
+
+        #endregion
+
+        #region 我的视线2-会有int数据长度不够的问题
+
+        public ListNode AddTwoNumbers(ListNode l1, ListNode l2)
+        {
+            string str1 = "";
+            ListNode x1 = l1;
+            string str2 = "";
+            ListNode x2 = l2;
+            while (x1 != null)
+            {
+                str1 += x1.val;
+                x1 = x1.next;
+            }
+            while (x2 != null)
+            {
+                str2 += x2.val;
+                x2 = x2.next;
+            }
+
+            int int1 = int.Parse(str1);
+            int int2 = int.Parse(str2);
+
+            int total = int1 + int2;
+
+            ListNode listNode = new ListNode(0);
+            if (total != 0)
+            {
+                listNode = GetListNode(ref listNode, total);
+            }
+
+            return listNode;
+        }
+
+        ListNode GetListNode(ref ListNode p, int total)
+        {
+
+            p.val = total % 10;
+            total = total / 10;
+            if (total != 0)
+            {
+                p.next = new ListNode(0);
+                p.next = GetListNode(ref p.next, total);
+            }
+            return p;
+        }
+        #endregion
+
+        #region 他人实现，真香
+
+        public ListNode AddTwoNumbersOthers(ListNode l1, ListNode l2)
+        {
+            //由于给定的两个链表非空,因此不需要进行输入条件的判断.
+            int carry = 0;
+            //创建临时头节点.
+            ListNode head = new ListNode(-1);
+            //创建临时节点，用来一直跟踪返回链表的最后一个节点.
+            ListNode tmp = head;
+            while (l1 != null || l2 != null || carry != 0)
+            {
+                int num1 = l1 == null ? 0 : l1.val;
+                int num2 = l2 == null ? 0 : l2.val;
+                int sum = num1 + num2 + carry;
+                //更新进位值.
+                carry = sum / 10;
+                //创建新节点.
+                tmp.next = new ListNode(sum % 10);
+                tmp = tmp.next;
+                //l1和l2后移，如果可以的话！
+                l1 = l1 != null ? l1.next : null;
+                l2 = l2 != null ? l2.next : null;
+            }
+            return head.next;
+        }
+
+        #endregion
+
+
+
+
+
+
+
+
 
         [Fact]
         public void test()
