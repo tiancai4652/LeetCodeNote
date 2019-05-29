@@ -51,20 +51,6 @@ namespace FirstLevel._2
             return listNode;
         }
 
-        ListNode GetListNode(ref ListNode p,int total)
-        {
-
-            p.val = total % 10;
-            total = total / 10;
-            if (total != 0)
-            {
-                p.next = new ListNode(0);
-                p.next = GetListNode(ref p.next, total);
-            }
-            return p;
-        }
-
-
         public ListNode AddTwoNumbers2(ListNode l1, ListNode l2)
         {
             List<int> list1 = new List<int>();
@@ -88,42 +74,61 @@ namespace FirstLevel._2
             List<int> total = new List<int>();
 
             int count = list1.Count < list2.Count ? list1.Count : list2.Count;
-            for (int i = 0; i < count; i++)
-            {
-              
-            }
 
-
-
-
-
-            int int1 = int.Parse(str1);
-            int int2 = int.Parse(str2);
-
-            int total = int1 + int2;
+            GetInt(ref total, list1, list2, 0, 0, count);
 
             ListNode listNode = new ListNode(0);
+            return GetListNode2(ref listNode, total);
+        }
+
+        ListNode GetListNode(ref ListNode p,int total)
+        {
+
+            p.val = total % 10;
+            total = total / 10;
             if (total != 0)
             {
-                listNode = GetListNode(ref listNode, total);
+                p.next = new ListNode(0);
+                p.next = GetListNode(ref p.next, total);
             }
+            return p;
+        }
 
-            return listNode;
+        ListNode GetListNode2(ref ListNode p, List<int> total)
+        {
+            p.val = total[0];
+            total.Remove(total.First());
+            if (total.Count != 0)
+            {
+                p.next = new ListNode(0);
+                p.next = GetListNode2(ref p.next, total);
+            }
+            return p;
         }
 
 
-        public int GetInt(List<int> total,List<int> l1,List<int> l2,int index,int extra)
+       
+
+
+         void GetInt(ref List<int> total, List<int> l1, List<int> l2, int index, int extra, int count)
         {
-            int x = l1[index] + l2[index]+ extra;
+            int x = l1[index] + l2[index] + extra;
             if (x > 10)
             {
                 total.Add(x - 10);
-                total.Add(GetInt(total, l1, l2, index + 1, 0));
+                index += 1;
+                if (index <= count - 1)
+                {
+                    GetInt(ref total, l1, l2, index , 0, count);
+                }
             }
             else
             {
                 total.Add(x);
-                total.Add(GetInt(total, l1,l2,index+1,1));
+                if (index <= count - 1)
+                {
+                    GetInt(ref total, l1, l2, index , 1, count);
+                }
             }
         }
 
@@ -132,9 +137,9 @@ namespace FirstLevel._2
         public void test()
         {
 
-            ListNode num1 = new ListNode(0);
-            //ListNode num11 = num1.next = new ListNode(4);
-            //ListNode num111 = num11.next = new ListNode(3);
+            ListNode num1 = new ListNode(2);
+            ListNode num11 = num1.next = new ListNode(4);
+            ListNode num111 = num11.next = new ListNode(3);
 
             ListNode num2 = new ListNode(5);
             ListNode num22 = num2.next = new ListNode(6);
