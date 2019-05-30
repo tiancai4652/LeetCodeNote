@@ -30,6 +30,10 @@ namespace FirstLevel._3
     {
         public int LengthOfLongestSubstring(string s)
         {
+            if (string.IsNullOrEmpty(s))
+            {
+                return 0;
+            }
             while (!CheckIsStrAllCharSingle(s))
             {
                 s = GetlongestStrByTheMostChar(s);
@@ -87,6 +91,7 @@ namespace FirstLevel._3
         [InlineData("abcabcbb", 3)]
         [InlineData("bbbbb", 1)]
         [InlineData("pwwkew", 3)]
+        [InlineData("", 0)]
         public void test(string s,int result)
         {
             Assert.Equal(LengthOfLongestSubstring(s), result);
