@@ -35,8 +35,6 @@ namespace FirstLevel._3
                 return 0;
             }
 
-            
-
             Task<int> taskFont = Task.Factory.StartNew<int>(new Func<int>(() =>
             {
                 while (!CheckIsStrAllCharSingle(s))
@@ -57,9 +55,12 @@ namespace FirstLevel._3
                 return s.Length;
             }));
 
-            int a =  taskFont.Result;
 
+            Task.WaitAll(taskFont, taskAfter);
 
+            int count1 = taskFont.Result;
+            int count2 = taskAfter.Result;
+            return count1 > count2 ? count1 : count2;
 
         }
 
