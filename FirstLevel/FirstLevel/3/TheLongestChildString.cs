@@ -34,15 +34,36 @@ namespace FirstLevel._3
             {
                 return 0;
             }
-            while (!CheckIsStrAllCharSingle(s))
+
+            
+
+            Task<int> taskFont = Task.Factory.StartNew<int>(new Func<int>(() =>
             {
-                s = GetlongestStrByTheMostChar(s);
-                //Thread.Sleep(50);
-            }
-            return s.Length;
+                while (!CheckIsStrAllCharSingle(s))
+                {
+                    s = GetlongestStrByTheMostCharByFontSplit(s);
+                    //Thread.Sleep(50);
+                }
+                return s.Length;
+            }));
+
+            Task<int> taskAfter = Task.Factory.StartNew<int>(new Func<int>(() =>
+            {
+                while (!CheckIsStrAllCharSingle(s))
+                {
+                    s = GetlongestStrByTheMostCharByAfterSplit(s);
+                    //Thread.Sleep(50);
+                }
+                return s.Length;
+            }));
+
+            int a =  taskFont.Result;
+
+
+
         }
 
-        public string GetlongestStrByTheMostChar(string s)
+        public string GetlongestStrByTheMostCharByFontSplit(string s)
         {
             Dictionary<char, int> dic = new Dictionary<char, int>();
             foreach (var item in s)
@@ -60,6 +81,29 @@ namespace FirstLevel._3
             char devideChar = dic.OrderByDescending(t => t.Value).First().Key;
             string replace = ";" + devideChar;
             string charStr =new StringBuilder().Append(devideChar).ToString() ;
+            s = s.Replace(charStr, replace);
+            string[] list = s.Split(';');
+            return list.OrderByDescending(t => t.Length).First();
+        }
+
+        public string GetlongestStrByTheMostCharByAfterSplit(string s)
+        {
+            Dictionary<char, int> dic = new Dictionary<char, int>();
+            foreach (var item in s)
+            {
+                if (dic.Keys.Contains(item))
+                {
+                    dic[item] += 1;
+                }
+                else
+                {
+                    dic.Add(item, 1);
+                }
+            }
+           ;
+            char devideChar = dic.OrderByDescending(t => t.Value).First().Key;
+            string replace = devideChar + ";";
+            string charStr = new StringBuilder().Append(devideChar).ToString();
             s = s.Replace(charStr, replace);
             string[] list = s.Split(';');
             return list.OrderByDescending(t => t.Length).First();
@@ -92,6 +136,7 @@ namespace FirstLevel._3
         [InlineData("bbbbb", 1)]
         [InlineData("pwwkew", 3)]
         [InlineData("", 0)]
+        [InlineData("cdd", 2)]
         public void test(string s,int result)
         {
             Assert.Equal(LengthOfLongestSubstring(s), result);
