@@ -60,6 +60,7 @@
     <Compile Include="1_TwoSum\Two Sum.cs" />
     <Compile Include="2\Help\NodeTest.cs" />
     <Compile Include="2\TwoNumAdd.cs" />
+    <Compile Include="3\TheLongestChildString.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
