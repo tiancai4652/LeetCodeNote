@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace FirstLevel._3
@@ -34,37 +33,18 @@ namespace FirstLevel._3
             {
                 return 0;
             }
-
-            Task<int> taskFont = Task.Factory.StartNew<int>(new Func<int>(() =>
+            string str1 = s;
+            int count1 = 0;
+            while (!CheckIsStrAllCharSingle(str1))
             {
-                while (!CheckIsStrAllCharSingle(s))
-                {
-                    s = GetlongestStrByTheMostCharByFontSplit(s);
-                    //Thread.Sleep(50);
-                }
-                return s.Length;
-            }));
-
-            Task<int> taskAfter = Task.Factory.StartNew<int>(new Func<int>(() =>
-            {
-                while (!CheckIsStrAllCharSingle(s))
-                {
-                    s = GetlongestStrByTheMostCharByAfterSplit(s);
-                    //Thread.Sleep(50);
-                }
-                return s.Length;
-            }));
-
-
-            Task.WaitAll(taskFont, taskAfter);
-
-            int count1 = taskFont.Result;
-            int count2 = taskAfter.Result;
-            return count1 > count2 ? count1 : count2;
-
+                str1 = GetlongestStrByTheMostChar(str1);
+                Thread.Sleep(10);
+            }
+            count1 = str1.Length;
+            return count1 ;
         }
 
-        public string GetlongestStrByTheMostCharByFontSplit(string s)
+        public string GetlongestStrByTheMostChar(string s)
         {
             Dictionary<char, int> dic = new Dictionary<char, int>();
             foreach (var item in s)
@@ -82,33 +62,28 @@ namespace FirstLevel._3
             char devideChar = dic.OrderByDescending(t => t.Value).First().Key;
             string replace = ";" + devideChar;
             string charStr =new StringBuilder().Append(devideChar).ToString() ;
-            s = s.Replace(charStr, replace);
-            string[] list = s.Split(';');
-            return list.OrderByDescending(t => t.Length).First();
+           string temp1 = s.Replace(charStr, replace);
+            string[] list = temp1.Split(';');
+            string str1= list.OrderByDescending(t => t.Length).First();
+
+            string replace2 = devideChar+ ";";
+            string charStr2 = new StringBuilder().Append(devideChar).ToString();
+            string temp2 = s.Replace(charStr2, replace2);
+            string[] list2 = temp2.Split(';');
+            string str2 = list2.OrderByDescending(t => t.Length).First();
+
+            if (string.IsNullOrEmpty(str1))
+            {
+                return str2;
+            }
+            if (string.IsNullOrEmpty(str2))
+            {
+                return str1;
+            }
+            return str1.Length > str2.Length ? str1 : str2;
         }
 
-        public string GetlongestStrByTheMostCharByAfterSplit(string s)
-        {
-            Dictionary<char, int> dic = new Dictionary<char, int>();
-            foreach (var item in s)
-            {
-                if (dic.Keys.Contains(item))
-                {
-                    dic[item] += 1;
-                }
-                else
-                {
-                    dic.Add(item, 1);
-                }
-            }
-           ;
-            char devideChar = dic.OrderByDescending(t => t.Value).First().Key;
-            string replace = devideChar + ";";
-            string charStr = new StringBuilder().Append(devideChar).ToString();
-            s = s.Replace(charStr, replace);
-            string[] list = s.Split(';');
-            return list.OrderByDescending(t => t.Length).First();
-        }
+     
 
         public bool CheckIsStrAllCharSingle(string s)
         {
@@ -138,6 +113,7 @@ namespace FirstLevel._3
         [InlineData("pwwkew", 3)]
         [InlineData("", 0)]
         [InlineData("cdd", 2)]
+        [InlineData("abba",2)]
         public void test(string s,int result)
         {
             Assert.Equal(LengthOfLongestSubstring(s), result);
