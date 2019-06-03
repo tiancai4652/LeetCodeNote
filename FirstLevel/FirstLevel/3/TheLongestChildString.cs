@@ -46,6 +46,7 @@ namespace FirstLevel._3
 
         public string GetlongestStrByTheMostChar(string s)
         {
+            string sAdder = s;
             Dictionary<char, int> dic = new Dictionary<char, int>();
             foreach (var item in s)
             {
@@ -60,15 +61,17 @@ namespace FirstLevel._3
             }
             ;
             char devideChar = dic.OrderByDescending(t => t.Value).First().Key;
+            sAdder = sAdder.Insert(0, new StringBuilder().Append(devideChar).ToString());
+            sAdder = sAdder.Insert(sAdder.Length, new StringBuilder().Append(devideChar).ToString());
             string replace = ";" + devideChar;
-            string charStr =new StringBuilder().Append(devideChar).ToString() ;
-           string temp1 = s.Replace(charStr, replace);
+            string charStr = new StringBuilder().Append(devideChar).ToString();
+            string temp1 = sAdder.Replace(charStr, replace);
             string[] list = temp1.Split(';');
-            string str1= list.OrderByDescending(t => t.Length).First();
+            string str1 = list.OrderByDescending(t => t.Length).First();
 
-            string replace2 = devideChar+ ";";
+            string replace2 = devideChar + ";";
             string charStr2 = new StringBuilder().Append(devideChar).ToString();
-            string temp2 = s.Replace(charStr2, replace2);
+            string temp2 = sAdder.Replace(charStr2, replace2);
             string[] list2 = temp2.Split(';');
             string str2 = list2.OrderByDescending(t => t.Length).First();
 
@@ -114,6 +117,7 @@ namespace FirstLevel._3
         [InlineData("", 0)]
         [InlineData("cdd", 2)]
         [InlineData("abba",2)]
+        [InlineData("abcb", 3)]
         public void test(string s,int result)
         {
             Assert.Equal(LengthOfLongestSubstring(s), result);
